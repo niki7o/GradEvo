@@ -38,6 +38,13 @@ ALPHA_CORRECTED: float = ALPHA / N_FAMILY_TESTS
 SHAPIRO_ALPHA: float = 0.05
 PPO_POLICY: str = 'MlpPolicy'
 PPO_HYPERPARAMS: Dict[str, object] = {'policy_kwargs': {'net_arch': [64, 64]}, 'verbose': 0}
+ES_POPULATION_SIZE: int = 40
+ES_SIGMA: float = 0.1
+ES_LR: float = 0.03
+QUICK_ES_POPULATION_SIZE: int = 12
+CMAES_POPULATION_SIZE: int = 40
+CMAES_SIGMA0: float = 0.1
+QUICK_CMAES_POPULATION_SIZE: int = 12
 
 @dataclass(frozen=True)
 class EnvSpec:
