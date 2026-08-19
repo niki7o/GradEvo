@@ -66,7 +66,7 @@ baseline comparisons.
 | **H1** | NEAT's final fitness is **not significantly different** from PPO's                                    | Mann-Whitney U (two-sided)                |
 | **H2** | PPO is **more sample-efficient** than NEAT (higher normalized learning-curve AUC)                     | Wilcoxon signed-rank (paired, one-sided)  |
 | **H3** | NEAT **degrades less** under held-out perturbation (smaller Δfitness)                                 | Mann-Whitney U (one-sided)                |
-| **H4** | **PPO > ES** on final fitness, holding architecture constant (the "gradient contribution")            | Mann-Whitney U (one-sided)                |
+| **H4** | PPO-at-SB3-defaults and ES-at-reference-defaults differ in final fitness (bounded defaults-vs-defaults comparison, not a general "gradient" claim) | Mann-Whitney U (two-sided) |
 
 Non-parametric tests are the default given small seed counts. Rank-biserial
 correlation is reported as the effect size for every rank-based test. A
@@ -94,11 +94,12 @@ plainly, including where the gates did not pass:
   in final fitness.
 - **H2 (PPO more sample-efficient).** Failed to reject.
 - **H3 (NEAT more robust).** Failed to reject.
-- **H4 (PPO > ES, the gradient contribution).** Failed to reject strongly
-  (p = 0.9997, effect −0.63 in the *opposite* direction). At 500k env-steps
-  on this task with default hyperparameters, the exact policy gradient did
-  **not** produce a detectable advantage over gradient-free weight
-  evolution on the same fixed [64, 64] MLP.
+- **H4 (PPO-defaults vs ES-defaults).** Prior (one-sided) framing failed to
+  reject strongly in the wrong direction; the retake protocol reframes H4
+  as two-sided, since PPO and ES differ in more than just the gradient
+  (library, RNG stream, tuned vs default hyperparameters, update-rule
+  structure). Retake numbers to be reported after data collection under the
+  locked protocol.
 
 These results are bounded to this task, budget, and untuned hyperparameter
 setting. The notebook conclusion (§10) discusses their scope and
