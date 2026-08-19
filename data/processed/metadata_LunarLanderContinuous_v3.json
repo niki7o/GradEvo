@@ -1,0 +1,17 @@
+{
+  "env_id": "LunarLanderContinuous-v3",
+  "quick": true,
+  "n_seeds": 5,
+  "seeds": [
+    1234,
+    1235,
+    1236,
+    1237,
+    1238
+  ],
+  "step_budget": 20000,
+  "neat_population_size": 20,
+  "eval_episodes": 5,
+  "alpha_corrected": 0.016666666666666666,
+  "gradevo_version": "1.0.0"
+}

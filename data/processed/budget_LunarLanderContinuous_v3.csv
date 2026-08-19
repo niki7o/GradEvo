@@ -1,0 +1,3 @@
+method,requested_steps,realized_steps_mean,realized_steps_std,realized_steps_min,realized_steps_max,discrepancy_pct,wall_clock_mean_s,n_seeds
+ppo,20000,20480.0,0.0,20480,20480,2.4,5.0,5
+neat,20000,20865.8,814.8,20030,22173,4.33,0.6,5
