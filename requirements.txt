@@ -15,6 +15,7 @@ pygame==2.6.1
 stable-baselines3==2.7.1
 torch==2.8.0
 neat-python==2.0.0
+cma==4.4.4
 
 # Visualization
 matplotlib==3.9.4
