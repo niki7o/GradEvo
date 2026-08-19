@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Testing / tooling
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# MLflow local store + artifacts
+mlflow.db
+mlruns/
+
+# OS
+.DS_Store
+
+# NOTE: data/processed/ and models/ ARE committed on purpose (result tables and
+# trained checkpoints are project deliverables). Only transient tracking state
+# and caches are ignored.

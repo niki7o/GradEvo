@@ -1,0 +1,30 @@
+# Pinned to the exact versions used to develop and test GradEvo (Python 3.9).
+# Core scientific stack
+numpy==2.0.2
+scipy==1.13.1
+pandas==2.3.3
+
+# Environments
+gymnasium==1.1.1
+# LunarLanderContinuous-v3 (Box2D). box2d-py builds from source and needs SWIG;
+# see docs/reproducing.md if the wheel build fails on macOS.
+box2d-py==2.3.8
+pygame==2.6.1
+
+# Learning methods (do not reimplement these -- the contribution is the design)
+stable-baselines3==2.7.1
+torch==2.8.0
+neat-python==2.0.0
+
+# Visualization
+matplotlib==3.9.4
+seaborn==0.13.2
+networkx==3.2.1
+
+# Experiment tracking + artifact export
+mlflow==3.1.4
+joblib==1.5.3
+cloudpickle==3.1.2
+
+# Testing
+pytest==8.4.2
