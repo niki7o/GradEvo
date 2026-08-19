@@ -27,6 +27,6 @@
   "step_budget": 500000,
   "neat_population_size": 60,
   "eval_episodes": 20,
-  "alpha_corrected": 0.0125,
+  "alpha_corrected": 0.01,
   "gradevo_version": "1.0.0"
 }

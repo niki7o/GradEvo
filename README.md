@@ -77,33 +77,54 @@ and accelerated, 10,000 resamples), preferred over the naive percentile
 bootstrap for small skewed samples. A null result is a legitimate outcome:
 H1, H3, H4 are framed so that failing to reject is itself informative.
 
-## Headline results (LunarLanderContinuous-v3, N=20, 500k steps)
+## Headline results (retake, N=20, 500k steps, pre-registered)
 
-The pre-registered suite ran on the primary task. The results are reported
-plainly, including where the gates did not pass:
+Two environments run under the identical protocol. Mean clean fitness across
+20 seeds (higher is better on both scales; solved thresholds in bold):
 
-- **H0 vs random.** All four learned methods clearly beat the random-action
-  baseline (p < 1e-4, effect size ≈ +1.0 for PPO, ES, CMA-ES; +0.79 for NEAT).
-- **H0 vs heuristic.** None of the learned methods decisively beat the
-  hand-coded PD-style heuristic. Effect sizes: PPO −0.95, NEAT −0.90 (both
-  clearly worse than the heuristic), ES −0.33 (mildly worse), CMA-ES −0.05
-  (essentially tied). A competent domain-knowledge baseline remains
-  competitive with untuned learned policies at this budget.
-- **H1 (NEAT ≠ PPO).** Failed to reject (p = 0.014, just above the
-  Bonferroni-corrected α = 0.0125). Consistent with no detected difference
-  in final fitness.
-- **H2 (PPO more sample-efficient).** Failed to reject.
-- **H3 (NEAT more robust).** Failed to reject.
-- **H4 (PPO-defaults vs ES-defaults).** Prior (one-sided) framing failed to
-  reject strongly in the wrong direction; the retake protocol reframes H4
-  as two-sided, since PPO and ES differ in more than just the gradient
-  (library, RNG stream, tuned vs default hyperparameters, update-rule
-  structure). Retake numbers to be reported after data collection under the
-  locked protocol.
+**LunarLanderContinuous-v3** (solved ≥ **200**):
 
-These results are bounded to this task, budget, and untuned hyperparameter
-setting. The notebook conclusion (§10) discusses their scope and
-interpretation in more detail.
+| method     | mean  | notes                                  |
+|------------|------:|----------------------------------------|
+| heuristic  | 253.3 | hand-coded PD controller               |
+| CMA-ES     | 238.4 | above solved                           |
+| ES         | 223.1 | above solved                           |
+| ppo_tuned  | 182.8 | sb3-zoo tuned config, below solved     |
+| ppo        | 165.1 | sb3 defaults, below solved             |
+| NEAT       |  34.9 | high variance                          |
+| random     | -233.5| baseline floor                         |
+
+**Pendulum-v1** (solved ≈ **-200**):
+
+| method     |   mean | notes                                  |
+|------------|-------:|----------------------------------------|
+| **ppo**    | **-209.8** | at solved threshold; only method to beat the heuristic |
+| CMA-ES     | -1042.2| well below solved                       |
+| ES         | -1096.0|                                         |
+| heuristic  | -1107.9|                                         |
+| ppo_tuned  | -1107.9| tuned-for-LunarLander config generalises poorly |
+| NEAT       | -1169.1|                                         |
+| random     | -1306.5| baseline floor                          |
+
+**Pre-registered hypothesis outcomes (α_Bonferroni = 0.010):**
+
+- **H0 vs random.** All methods beat random on both envs (p < 0.005).
+- **H0 vs heuristic.** On LunarLander no learned method wins (heuristic is
+  strong). On Pendulum only default-PPO beats the heuristic (p < 1e-4).
+- **H1 (NEAT ≠ PPO).** LunarLander: fail to reject (p = 0.014). Pendulum:
+  **reject** (p < 1e-5, effect -1.0, PPO wins).
+- **H2 (PPO more sample-efficient).** Fail to reject on both envs.
+- **H3 (NEAT more robust to perturbation).** Fail to reject on both envs.
+- **H4 (PPO-defaults ≠ ES-defaults, two-sided).** Both envs reject.
+  LunarLander effect -0.63 (ES higher); Pendulum effect +1.0 (PPO higher).
+  **The direction flips across environments** — no universal ordering of
+  gradient vs gradient-free at defaults.
+- **H5 (tuned-PPO > default-PPO).** Fail to reject on both envs. On
+  LunarLander p = 0.09 (tuned slightly better); on Pendulum the
+  LunarLander-tuned config actively hurts (effect -1.0).
+
+Bounded to these tasks, budgets, and hyperparameter settings. The notebook
+conclusion (§10) unpacks the H4 direction-flip and the H5 no-signal result.
 
 ## Method at a glance
 

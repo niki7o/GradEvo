@@ -1,6 +1,8 @@
 env_id,method,condition,seed,fitness
 LunarLanderContinuous-v3,ppo,clean,1234,122.6845744415793
 LunarLanderContinuous-v3,ppo,perturbed,1234,104.65795626484301
+LunarLanderContinuous-v3,ppo_tuned,clean,1234,118.30176545010393
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1234,89.05469290623347
 LunarLanderContinuous-v3,es,clean,1234,269.7781436005931
 LunarLanderContinuous-v3,es,perturbed,1234,240.34635429778845
 LunarLanderContinuous-v3,cmaes,clean,1234,211.52014429865181
@@ -9,6 +11,8 @@ LunarLanderContinuous-v3,neat,clean,1234,101.74695274181332
 LunarLanderContinuous-v3,neat,perturbed,1234,59.61206578900622
 LunarLanderContinuous-v3,ppo,clean,1235,199.99260604868635
 LunarLanderContinuous-v3,ppo,perturbed,1235,85.08034636581318
+LunarLanderContinuous-v3,ppo_tuned,clean,1235,192.85805481585265
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1235,125.36111348936797
 LunarLanderContinuous-v3,es,clean,1235,245.5298998154131
 LunarLanderContinuous-v3,es,perturbed,1235,142.70829551674416
 LunarLanderContinuous-v3,cmaes,clean,1235,222.881013858888
@@ -17,6 +21,8 @@ LunarLanderContinuous-v3,neat,clean,1235,-312.25385179071526
 LunarLanderContinuous-v3,neat,perturbed,1235,-189.5472754428874
 LunarLanderContinuous-v3,ppo,clean,1236,115.35193096240349
 LunarLanderContinuous-v3,ppo,perturbed,1236,106.20931099148125
+LunarLanderContinuous-v3,ppo_tuned,clean,1236,178.62658084833282
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1236,108.76820560775725
 LunarLanderContinuous-v3,es,clean,1236,197.42743879748224
 LunarLanderContinuous-v3,es,perturbed,1236,128.32975091472332
 LunarLanderContinuous-v3,cmaes,clean,1236,260.2820726773378
@@ -25,6 +31,8 @@ LunarLanderContinuous-v3,neat,clean,1236,-143.32022541698618
 LunarLanderContinuous-v3,neat,perturbed,1236,-243.6765798133775
 LunarLanderContinuous-v3,ppo,clean,1237,175.87635104438306
 LunarLanderContinuous-v3,ppo,perturbed,1237,120.43859153344638
+LunarLanderContinuous-v3,ppo_tuned,clean,1237,200.64440914717775
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1237,88.5668043141156
 LunarLanderContinuous-v3,es,clean,1237,263.1593310616002
 LunarLanderContinuous-v3,es,perturbed,1237,163.3113740428973
 LunarLanderContinuous-v3,cmaes,clean,1237,198.9269275744303
@@ -33,6 +41,8 @@ LunarLanderContinuous-v3,neat,clean,1237,235.46934126278614
 LunarLanderContinuous-v3,neat,perturbed,1237,95.93289012824448
 LunarLanderContinuous-v3,ppo,clean,1238,135.6718151009323
 LunarLanderContinuous-v3,ppo,perturbed,1238,120.47191772114847
+LunarLanderContinuous-v3,ppo_tuned,clean,1238,147.00608620504585
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1238,69.50089463087993
 LunarLanderContinuous-v3,es,clean,1238,209.89035553943228
 LunarLanderContinuous-v3,es,perturbed,1238,208.15201401124517
 LunarLanderContinuous-v3,cmaes,clean,1238,230.946371374148
@@ -41,6 +51,8 @@ LunarLanderContinuous-v3,neat,clean,1238,-123.34257905878647
 LunarLanderContinuous-v3,neat,perturbed,1238,-66.79522878473037
 LunarLanderContinuous-v3,ppo,clean,1239,150.613456180079
 LunarLanderContinuous-v3,ppo,perturbed,1239,119.67576783145651
+LunarLanderContinuous-v3,ppo_tuned,clean,1239,166.74639108844457
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1239,74.36556126644209
 LunarLanderContinuous-v3,es,clean,1239,149.35602253224454
 LunarLanderContinuous-v3,es,perturbed,1239,76.74778067805057
 LunarLanderContinuous-v3,cmaes,clean,1239,253.097151223824
@@ -49,6 +61,8 @@ LunarLanderContinuous-v3,neat,clean,1239,32.384001638026575
 LunarLanderContinuous-v3,neat,perturbed,1239,76.09457513744653
 LunarLanderContinuous-v3,ppo,clean,1240,236.33161799251326
 LunarLanderContinuous-v3,ppo,perturbed,1240,117.1894878345689
+LunarLanderContinuous-v3,ppo_tuned,clean,1240,77.87481103449834
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1240,28.73874466972011
 LunarLanderContinuous-v3,es,clean,1240,236.76636157053167
 LunarLanderContinuous-v3,es,perturbed,1240,156.09321070452512
 LunarLanderContinuous-v3,cmaes,clean,1240,270.25143119795945
@@ -57,6 +71,8 @@ LunarLanderContinuous-v3,neat,clean,1240,283.25650443079945
 LunarLanderContinuous-v3,neat,perturbed,1240,61.99787575870448
 LunarLanderContinuous-v3,ppo,clean,1241,174.35275318018483
 LunarLanderContinuous-v3,ppo,perturbed,1241,114.56780938623285
+LunarLanderContinuous-v3,ppo_tuned,clean,1241,190.23982559260716
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1241,104.44860021447445
 LunarLanderContinuous-v3,es,clean,1241,272.71755602288556
 LunarLanderContinuous-v3,es,perturbed,1241,160.66598336462545
 LunarLanderContinuous-v3,cmaes,clean,1241,266.2564132876863
@@ -65,6 +81,8 @@ LunarLanderContinuous-v3,neat,clean,1241,85.83978448182798
 LunarLanderContinuous-v3,neat,perturbed,1241,1.4824025807527452
 LunarLanderContinuous-v3,ppo,clean,1242,140.42809223866942
 LunarLanderContinuous-v3,ppo,perturbed,1242,91.59352020412628
+LunarLanderContinuous-v3,ppo_tuned,clean,1242,200.7306333551158
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1242,115.88393730648188
 LunarLanderContinuous-v3,es,clean,1242,219.2169561801612
 LunarLanderContinuous-v3,es,perturbed,1242,147.7847034927251
 LunarLanderContinuous-v3,cmaes,clean,1242,202.08699980187706
@@ -73,6 +91,8 @@ LunarLanderContinuous-v3,neat,clean,1242,143.42245020349145
 LunarLanderContinuous-v3,neat,perturbed,1242,73.12217878472923
 LunarLanderContinuous-v3,ppo,clean,1243,175.09033359197315
 LunarLanderContinuous-v3,ppo,perturbed,1243,113.66606610200783
+LunarLanderContinuous-v3,ppo_tuned,clean,1243,235.51110198848474
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1243,113.86707861134494
 LunarLanderContinuous-v3,es,clean,1243,221.92417469993308
 LunarLanderContinuous-v3,es,perturbed,1243,158.67725076051713
 LunarLanderContinuous-v3,cmaes,clean,1243,272.0765994587782
@@ -81,6 +101,8 @@ LunarLanderContinuous-v3,neat,clean,1243,210.94730764291967
 LunarLanderContinuous-v3,neat,perturbed,1243,109.5292473616988
 LunarLanderContinuous-v3,ppo,clean,1244,210.8985261118126
 LunarLanderContinuous-v3,ppo,perturbed,1244,122.33238939913004
+LunarLanderContinuous-v3,ppo_tuned,clean,1244,170.67571824088742
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1244,99.83707426285523
 LunarLanderContinuous-v3,es,clean,1244,164.23343813813617
 LunarLanderContinuous-v3,es,perturbed,1244,111.10863303559373
 LunarLanderContinuous-v3,cmaes,clean,1244,261.46106615083033
@@ -89,6 +111,8 @@ LunarLanderContinuous-v3,neat,clean,1244,150.28388664937293
 LunarLanderContinuous-v3,neat,perturbed,1244,-4.628545990231017
 LunarLanderContinuous-v3,ppo,clean,1245,147.52838988490652
 LunarLanderContinuous-v3,ppo,perturbed,1245,117.07213485016113
+LunarLanderContinuous-v3,ppo_tuned,clean,1245,204.78367221958072
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1245,128.79286426647894
 LunarLanderContinuous-v3,es,clean,1245,128.0992500959801
 LunarLanderContinuous-v3,es,perturbed,1245,83.54630321585653
 LunarLanderContinuous-v3,cmaes,clean,1245,218.74246521381232
@@ -97,6 +121,8 @@ LunarLanderContinuous-v3,neat,clean,1245,183.52845743057105
 LunarLanderContinuous-v3,neat,perturbed,1245,86.10508716783787
 LunarLanderContinuous-v3,ppo,clean,1246,198.48104135850997
 LunarLanderContinuous-v3,ppo,perturbed,1246,100.74773752433946
+LunarLanderContinuous-v3,ppo_tuned,clean,1246,227.91563936184576
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1246,121.92331466167636
 LunarLanderContinuous-v3,es,clean,1246,268.6904475026596
 LunarLanderContinuous-v3,es,perturbed,1246,181.29037571328135
 LunarLanderContinuous-v3,cmaes,clean,1246,270.27913585282374
@@ -105,6 +131,8 @@ LunarLanderContinuous-v3,neat,clean,1246,-51.947742762492375
 LunarLanderContinuous-v3,neat,perturbed,1246,-110.0354218568148
 LunarLanderContinuous-v3,ppo,clean,1247,204.44240359982552
 LunarLanderContinuous-v3,ppo,perturbed,1247,132.44645423140142
+LunarLanderContinuous-v3,ppo_tuned,clean,1247,224.4396185209987
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1247,105.93512436186566
 LunarLanderContinuous-v3,es,clean,1247,123.68973019698419
 LunarLanderContinuous-v3,es,perturbed,1247,30.41456294388707
 LunarLanderContinuous-v3,cmaes,clean,1247,251.25808263090002
@@ -113,6 +141,8 @@ LunarLanderContinuous-v3,neat,clean,1247,102.91447034060559
 LunarLanderContinuous-v3,neat,perturbed,1247,38.06088964018687
 LunarLanderContinuous-v3,ppo,clean,1248,117.00094956208963
 LunarLanderContinuous-v3,ppo,perturbed,1248,90.74494681271997
+LunarLanderContinuous-v3,ppo_tuned,clean,1248,123.76125359883667
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1248,103.0206951213391
 LunarLanderContinuous-v3,es,clean,1248,242.0425800732186
 LunarLanderContinuous-v3,es,perturbed,1248,135.65690559378297
 LunarLanderContinuous-v3,cmaes,clean,1248,258.3518140533129
@@ -121,6 +151,8 @@ LunarLanderContinuous-v3,neat,clean,1248,169.03054096435636
 LunarLanderContinuous-v3,neat,perturbed,1248,-46.375270153796876
 LunarLanderContinuous-v3,ppo,clean,1249,251.04591773940405
 LunarLanderContinuous-v3,ppo,perturbed,1249,128.55509036684867
+LunarLanderContinuous-v3,ppo_tuned,clean,1249,233.70351647104076
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1249,118.00976527679293
 LunarLanderContinuous-v3,es,clean,1249,265.64203135421
 LunarLanderContinuous-v3,es,perturbed,1249,204.3702910373992
 LunarLanderContinuous-v3,cmaes,clean,1249,273.53842494435366
@@ -129,6 +161,8 @@ LunarLanderContinuous-v3,neat,clean,1249,128.65721762606228
 LunarLanderContinuous-v3,neat,perturbed,1249,50.837083832877894
 LunarLanderContinuous-v3,ppo,clean,1250,150.9931189616128
 LunarLanderContinuous-v3,ppo,perturbed,1250,93.18127555730756
+LunarLanderContinuous-v3,ppo_tuned,clean,1250,165.9061117010604
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1250,68.70017129821656
 LunarLanderContinuous-v3,es,clean,1250,239.82012356491606
 LunarLanderContinuous-v3,es,perturbed,1250,181.1880286994461
 LunarLanderContinuous-v3,cmaes,clean,1250,141.26673190327895
@@ -137,6 +171,8 @@ LunarLanderContinuous-v3,neat,clean,1250,-165.84901258133283
 LunarLanderContinuous-v3,neat,perturbed,1250,-232.14445924110723
 LunarLanderContinuous-v3,ppo,clean,1251,83.2959275073172
 LunarLanderContinuous-v3,ppo,perturbed,1251,76.48876560857431
+LunarLanderContinuous-v3,ppo_tuned,clean,1251,206.99808741055284
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1251,116.28874653070224
 LunarLanderContinuous-v3,es,clean,1251,256.30076057759277
 LunarLanderContinuous-v3,es,perturbed,1251,121.2024370559499
 LunarLanderContinuous-v3,cmaes,clean,1251,279.24417545986216
@@ -145,6 +181,8 @@ LunarLanderContinuous-v3,neat,clean,1251,-229.91115509474972
 LunarLanderContinuous-v3,neat,perturbed,1251,-357.5494738770772
 LunarLanderContinuous-v3,ppo,clean,1252,175.01723380684948
 LunarLanderContinuous-v3,ppo,perturbed,1252,108.37979880507257
+LunarLanderContinuous-v3,ppo_tuned,clean,1252,145.46907022598592
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1252,78.04287937167099
 LunarLanderContinuous-v3,es,clean,1252,261.999739913441
 LunarLanderContinuous-v3,es,perturbed,1252,206.8788465457169
 LunarLanderContinuous-v3,cmaes,clean,1252,189.38841514615748
@@ -153,6 +191,8 @@ LunarLanderContinuous-v3,neat,clean,1252,-246.9985638741244
 LunarLanderContinuous-v3,neat,perturbed,1252,-278.25446218726086
 LunarLanderContinuous-v3,ppo,clean,1253,136.41325957500396
 LunarLanderContinuous-v3,ppo,perturbed,1253,98.89534940291234
+LunarLanderContinuous-v3,ppo_tuned,clean,1253,244.50209364811985
+LunarLanderContinuous-v3,ppo_tuned,perturbed,1253,139.45627273965613
 LunarLanderContinuous-v3,es,clean,1253,226.61598254915015
 LunarLanderContinuous-v3,es,perturbed,1253,131.42239671594837
 LunarLanderContinuous-v3,cmaes,clean,1253,236.01439062237233
