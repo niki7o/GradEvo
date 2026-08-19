@@ -57,7 +57,7 @@ H1 is framed so that *failing to reject* is itself informative.
 - **Seeds:** target **N = 20** per method per condition; **N = 15** is the
   documented fallback. The actual N is recorded in every results table.
 - **Libraries:** `stable-baselines3` (PPO/Adam), `neat-python` (NEAT),
-  `gymnasium`, `scipy.stats`, `mlflow` (SQLite tracking). Established
+  `cma` (CMA-ES), `gymnasium`, `scipy.stats`. Established
   implementations are used deliberately - the contribution is the experimental
   design, not reimplementing well-known algorithms.
 
@@ -80,28 +80,24 @@ jupyter lab notebooks/gradevo_analysis.ipynb
 ```
 
 `LunarLanderContinuous-v3` needs Box2D. On macOS: `brew install swig` first if
-the `box2d-py` build fails, then reinstall requirements. See
-[`docs/reproducing.md`](docs/reproducing.md) for exact commands and expected
-runtimes.
+the `box2d-py` build fails, then reinstall requirements.
 
 ## Repository layout
 
 ```
 gradevo/
-├── notebooks/gradevo_analysis.ipynb   # narrative + figures ONLY (no logic)
+├── notebooks/gradevo_analysis.ipynb
 ├── src/gradevo/
-│   ├── config.py                      # seeds, budgets, α, perturbation magnitudes
-│   ├── envs/                          # step-counter + perturbation wrappers
-│   ├── agents/                        # baselines, PPO (SB3), NEAT (neat-python)
-│   ├── experiment/                    # N-seed runner + budget-matching logic
-│   ├── metrics/                       # H0-H3 tests, effect sizes, AUC
-│   ├── plots/figures.py              # all figure generation
-│   └── tracking.py                    # MLflow (SQLite) helper
-├── scripts/                           # run_experiments.py, build_notebook.py
-├── models/                            # exported PPO .zip + NEAT pickled genomes
-├── data/processed/                    # tidy result CSVs + run metadata
-├── tests/                             # pytest suite (envs, agents, budget, stats)
-└── docs/reproducing.md
+│   ├── config.py
+│   ├── envs/
+│   ├── agents/
+│   ├── experiment/
+│   ├── metrics/
+│   └── plots/figures.py
+├── scripts/
+├── models/
+├── data/processed/
+└── tests/
 ```
 
 ## Testing

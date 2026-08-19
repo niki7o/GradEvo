@@ -3,7 +3,7 @@
 PYTHON ?= python
 ENV ?= LunarLanderContinuous-v3
 
-.PHONY: help install experiments quick cartpole notebook test mlflow-ui clean
+.PHONY: help install experiments quick cartpole notebook test clean
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -27,9 +27,6 @@ notebook:  ## Regenerate the analysis notebook deterministically
 
 test:  ## Run the pytest suite
 	$(PYTHON) -m pytest
-
-mlflow-ui:  ## Launch the MLflow UI against the local SQLite store
-	mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 clean:  ## Remove caches and generated notebook checkpoints (keeps data/models)
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
