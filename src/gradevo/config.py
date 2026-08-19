@@ -57,7 +57,7 @@ class EnvSpec:
     continuous: bool
     solved_threshold: float | None
 ENV_SPECS: Dict[str, EnvSpec] = {PRIMARY_ENV_ID: EnvSpec(PRIMARY_ENV_ID, continuous=True, solved_threshold=200.0), SECONDARY_ENV_ID: EnvSpec(SECONDARY_ENV_ID, continuous=False, solved_threshold=475.0), TERTIARY_ENV_ID: EnvSpec(TERTIARY_ENV_ID, continuous=True, solved_threshold=-200.0)}
-METHODS: List[str] = ['ppo', 'es', 'cmaes', 'neat']
+METHODS: List[str] = ['ppo', 'ppo_tuned', 'es', 'cmaes', 'neat']
 BASELINES: List[str] = ['random', 'heuristic']
 CONDITIONS: List[str] = ['clean', 'perturbed']
 

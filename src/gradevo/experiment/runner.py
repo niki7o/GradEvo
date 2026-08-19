@@ -80,6 +80,15 @@ def train_ppo_seed(env_id: str, seed: int, run_cfg: config.RunConfig) -> SeedRun
     _save_ppo_model(result.model, env_id, seed)
     return seed_run
 
+def train_ppo_tuned_seed(env_id: str, seed: int, run_cfg: config.RunConfig) -> SeedRun:
+    from gradevo.agents import ppo_agent
+    clean_eval = lambda s: make_clean_env(env_id, s)
+    result = ppo_agent.train_ppo(make_clean_env=lambda s: make_clean_env(env_id, s, step_counted=True), seed=seed, run_cfg=run_cfg, eval_fitness_fn=lambda pol, s: mean_fitness(clean_eval, pol, run_cfg.eval_episodes, s), hyperparams=config.PPO_TUNED_HYPERPARAMS)
+    policy = ppo_agent.make_ppo_policy(result.model)
+    seed_run = _evaluate_both_conditions(env_id, 'ppo_tuned', seed, run_cfg, policy, result.realized_steps, result.wall_clock_s, result.curve_steps, result.curve_fitness)
+    _save_ppo_tuned_model(result.model, env_id, seed)
+    return seed_run
+
 def train_es_seed(env_id: str, seed: int, run_cfg: config.RunConfig) -> SeedRun:
     from gradevo.agents import es_agent
     (obs_dim, action_dim, continuous, low, high) = _env_dims(env_id)
@@ -135,6 +144,11 @@ def evaluate_baselines(env_id: str, run_cfg: config.RunConfig) -> Dict[str, List
 def _save_ppo_model(model: object, env_id: str, seed: int) -> None:
     config.PPO_MODELS_DIR.mkdir(parents=True, exist_ok=True)
     path = config.PPO_MODELS_DIR / f'ppo_{env_id}_seed{seed}.zip'
+    model.save(str(path))
+
+def _save_ppo_tuned_model(model: object, env_id: str, seed: int) -> None:
+    config.PPO_TUNED_MODELS_DIR.mkdir(parents=True, exist_ok=True)
+    path = config.PPO_TUNED_MODELS_DIR / f'ppo_tuned_{env_id}_seed{seed}.zip'
     model.save(str(path))
 
 def _save_es_theta(theta: np.ndarray, shapes: List[Tuple[int, ...]], env_id: str, seed: int, method: str) -> None:

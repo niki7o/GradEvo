@@ -33,7 +33,7 @@ def run(run_cfg: config.RunConfig, tracking_enabled: bool) -> None:
     tracking.setup_tracking(enabled=tracking_enabled)
     logging.info('Run config: %s', run_cfg)
     seed_runs = []
-    trainers = (runner.train_ppo_seed, runner.train_es_seed, runner.train_cmaes_seed, runner.train_neat_seed)
+    trainers = (runner.train_ppo_seed, runner.train_ppo_tuned_seed, runner.train_es_seed, runner.train_cmaes_seed, runner.train_neat_seed)
     for seed in run_cfg.seeds:
         for trainer in trainers:
             seed_run = trainer(run_cfg.env_id, seed, run_cfg)
