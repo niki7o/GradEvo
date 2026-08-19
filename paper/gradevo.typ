@@ -206,32 +206,15 @@ fitness. The full corrected family is H1-H4 with $alpha_"corr" = 0.0125$.
 
 = 5. Results
 
-_Numerical results are read from the committed CSVs; final tables and
-figures will be inlined once the full N=20 run completes. Placeholders
-below mark the sections that fill in._
+The tables in this section are auto-generated from the committed CSVs by
+`scripts/build_results_snapshot.py`. Regenerating them after a new run
+also updates the paper: `python scripts/build_results_snapshot.py &&
+typst compile paper/gradevo.typ`. Learning curves, fitness distributions,
+the H4 decomposition figure, and the robustness bar chart live in the
+analysis notebook (`notebooks/gradevo_analysis.ipynb`); the paper cites
+them by section number rather than duplicating the images.
 
-== 5.1 Learning curves and final fitness
-
-Included from the analysis notebook, Section~5.1 and 5.2.
-
-== 5.2 Pre-registered hypothesis tests
-
-Included as a single table from `hypothesis_tests.results_to_dataframe`,
-with columns for identifier, test, statistic, $p$-value, corrected
-alpha, effect size, and the parametric-cross-check $p$-value. H0
-comparisons are expanded (one row per trained-method-vs-baseline pair).
-
-== 5.3 H4 decomposition
-
-The core contribution figure: mean clean fitness with 95% CIs, in the
-order PPO -> ES -> CMA-ES -> NEAT. The PPO-to-ES gap is the gradient
-contribution (same architecture, same budget); the ES-to-CMA-ES gap is
-the adaptive-search-geometry contribution; the CMA-ES-to-NEAT gap is
-the topology-search contribution.
-
-== 5.4 Robustness under held-out perturbation
-
-Included from the notebook, Section~5.6.
+#include "results.typ"
 
 = 6. Compute-fairness sensitivity
 
