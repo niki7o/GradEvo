@@ -71,6 +71,33 @@ and accelerated, 10,000 resamples), preferred over the naive percentile
 bootstrap for small skewed samples. A null result is a legitimate outcome:
 H1, H3, H4 are framed so that failing to reject is itself informative.
 
+## Headline results (LunarLanderContinuous-v3, N=20, 500k steps)
+
+The pre-registered suite ran on the primary task. The results are reported
+plainly, including where the gates did not pass:
+
+- **H0 vs random.** All four learned methods clearly beat the random-action
+  baseline (p < 1e-4, effect size ≈ +1.0 for PPO, ES, CMA-ES; +0.79 for NEAT).
+- **H0 vs heuristic.** None of the learned methods decisively beat the
+  hand-coded PD-style heuristic. Effect sizes: PPO −0.95, NEAT −0.90 (both
+  clearly worse than the heuristic), ES −0.33 (mildly worse), CMA-ES −0.05
+  (essentially tied). A competent domain-knowledge baseline remains
+  competitive with untuned learned policies at this budget.
+- **H1 (NEAT ≠ PPO).** Failed to reject (p = 0.014, just above the
+  Bonferroni-corrected α = 0.0125). Consistent with no detected difference
+  in final fitness.
+- **H2 (PPO more sample-efficient).** Failed to reject.
+- **H3 (NEAT more robust).** Failed to reject.
+- **H4 (PPO > ES, the gradient contribution).** Failed to reject strongly
+  (p = 0.9997, effect −0.63 in the *opposite* direction). At 500k env-steps
+  on this task with default hyperparameters, the exact policy gradient did
+  **not** produce a detectable advantage over gradient-free weight
+  evolution on the same fixed [64, 64] MLP.
+
+These results are bounded to this task, budget, and untuned hyperparameter
+setting. The notebook conclusion (§10) discusses their scope and
+interpretation in more detail.
+
 ## Method at a glance
 
 - **Primary task:** `LunarLanderContinuous-v3` (continuous, 8-D observation,
