@@ -11,7 +11,7 @@ from gradevo import tracking
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='Run the GradEvo experiment grid.')
-    parser.add_argument('--env', default=config.PRIMARY_ENV_ID, choices=[config.PRIMARY_ENV_ID, config.SECONDARY_ENV_ID], help='Environment id to run on.')
+    parser.add_argument('--env', default=config.PRIMARY_ENV_ID, choices=list(config.ENV_SPECS.keys()), help='Environment id to run on.')
     parser.add_argument('--quick', action='store_true', help='Reduced N/budget/population for fast verification.')
     parser.add_argument('--seeds', type=int, default=None, help='Override number of seeds per method/condition.')
     parser.add_argument('--steps', type=int, default=None, help='Override the per-run step budget (e.g. 200000 for a medium diagnostic run).')
