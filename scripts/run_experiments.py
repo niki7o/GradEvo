@@ -33,8 +33,9 @@ def run(run_cfg: config.RunConfig, tracking_enabled: bool) -> None:
     tracking.setup_tracking(enabled=tracking_enabled)
     logging.info('Run config: %s', run_cfg)
     seed_runs = []
+    trainers = (runner.train_ppo_seed, runner.train_es_seed, runner.train_cmaes_seed, runner.train_neat_seed)
     for seed in run_cfg.seeds:
-        for trainer in (runner.train_ppo_seed, runner.train_neat_seed):
+        for trainer in trainers:
             seed_run = trainer(run_cfg.env_id, seed, run_cfg)
             with tracking.track_run(f'{seed_run.method}_seed{seed}', {'method': seed_run.method, 'seed': seed, 'step_budget': run_cfg.step_budget, 'env': run_cfg.env_id}, enabled=tracking_enabled):
                 tracking.log_metrics({'clean_fitness': seed_run.clean_fitness, 'perturbed_fitness': seed_run.perturbed_fitness, 'realized_steps': seed_run.realized_steps, 'wall_clock_s': seed_run.wall_clock_s}, enabled=tracking_enabled)

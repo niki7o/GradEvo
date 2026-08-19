@@ -80,6 +80,28 @@ def train_ppo_seed(env_id: str, seed: int, run_cfg: config.RunConfig) -> SeedRun
     _save_ppo_model(result.model, env_id, seed)
     return seed_run
 
+def train_es_seed(env_id: str, seed: int, run_cfg: config.RunConfig) -> SeedRun:
+    from gradevo.agents import es_agent
+    (obs_dim, action_dim, continuous, low, high) = _env_dims(env_id)
+    pop = config.QUICK_ES_POPULATION_SIZE if run_cfg.quick else config.ES_POPULATION_SIZE
+    clean_eval = lambda s: make_clean_env(env_id, s)
+    result = es_agent.train_es(make_clean_env=lambda s: make_clean_env(env_id, s, step_counted=True), seed=seed, run_cfg=run_cfg, eval_fitness_fn=lambda pol, s: mean_fitness(clean_eval, pol, run_cfg.eval_episodes, s), obs_dim=obs_dim, action_dim=action_dim, continuous=continuous, action_low=low, action_high=high, population_size=pop)
+    policy = es_agent.make_es_policy(result.theta, result.shapes, continuous, low, high)
+    seed_run = _evaluate_both_conditions(env_id, 'es', seed, run_cfg, policy, result.realized_steps, result.wall_clock_s, result.curve_steps, result.curve_fitness)
+    _save_es_theta(result.theta, result.shapes, env_id, seed, method='es')
+    return seed_run
+
+def train_cmaes_seed(env_id: str, seed: int, run_cfg: config.RunConfig) -> SeedRun:
+    from gradevo.agents import cmaes_agent, es_agent
+    (obs_dim, action_dim, continuous, low, high) = _env_dims(env_id)
+    pop = config.QUICK_CMAES_POPULATION_SIZE if run_cfg.quick else config.CMAES_POPULATION_SIZE
+    clean_eval = lambda s: make_clean_env(env_id, s)
+    result = cmaes_agent.train_cmaes(make_clean_env=lambda s: make_clean_env(env_id, s, step_counted=True), seed=seed, run_cfg=run_cfg, eval_fitness_fn=lambda pol, s: mean_fitness(clean_eval, pol, run_cfg.eval_episodes, s), obs_dim=obs_dim, action_dim=action_dim, continuous=continuous, action_low=low, action_high=high, population_size=pop)
+    policy = es_agent.make_es_policy(result.theta, result.shapes, continuous, low, high)
+    seed_run = _evaluate_both_conditions(env_id, 'cmaes', seed, run_cfg, policy, result.realized_steps, result.wall_clock_s, result.curve_steps, result.curve_fitness)
+    _save_es_theta(result.theta, result.shapes, env_id, seed, method='cmaes')
+    return seed_run
+
 def train_neat_seed(env_id: str, seed: int, run_cfg: config.RunConfig) -> SeedRun:
     from gradevo.agents import neat_agent
     (obs_dim, action_dim, continuous, low, high) = _env_dims(env_id)
@@ -114,6 +136,12 @@ def _save_ppo_model(model: object, env_id: str, seed: int) -> None:
     config.PPO_MODELS_DIR.mkdir(parents=True, exist_ok=True)
     path = config.PPO_MODELS_DIR / f'ppo_{env_id}_seed{seed}.zip'
     model.save(str(path))
+
+def _save_es_theta(theta: np.ndarray, shapes: List[Tuple[int, ...]], env_id: str, seed: int, method: str) -> None:
+    out_dir = config.ES_MODELS_DIR if method == 'es' else config.CMAES_MODELS_DIR
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / f'{method}_{env_id}_seed{seed}.npz'
+    np.savez(path, theta=theta, shapes=np.array(shapes, dtype=object))
 
 def _save_neat_genome(genome: object, env_id: str, seed: int) -> None:
     config.NEAT_MODELS_DIR.mkdir(parents=True, exist_ok=True)

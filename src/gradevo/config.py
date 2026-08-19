@@ -8,6 +8,8 @@ DATA_DIR: Path = REPO_ROOT / 'data' / 'processed'
 MODELS_DIR: Path = REPO_ROOT / 'models'
 PPO_MODELS_DIR: Path = MODELS_DIR / 'ppo'
 NEAT_MODELS_DIR: Path = MODELS_DIR / 'neat'
+ES_MODELS_DIR: Path = MODELS_DIR / 'es'
+CMAES_MODELS_DIR: Path = MODELS_DIR / 'cmaes'
 NEAT_CONFIG_DIR: Path = PACKAGE_ROOT / 'agents'
 MLFLOW_DB_PATH: Path = REPO_ROOT / 'mlflow.db'
 MLFLOW_TRACKING_URI: str = f'sqlite:///{MLFLOW_DB_PATH}'
@@ -33,7 +35,7 @@ OBS_NOISE_FRAC: float = 0.02
 ACTION_NOISE_FRAC: float = 0.05
 LUNARLANDER_OBS_RANGES: Tuple[float, ...] = (2.0, 2.0, 5.0, 5.0, 6.28, 5.0, 0.0, 0.0)
 ALPHA: float = 0.05
-N_FAMILY_TESTS: int = 3
+N_FAMILY_TESTS: int = 4
 ALPHA_CORRECTED: float = ALPHA / N_FAMILY_TESTS
 SHAPIRO_ALPHA: float = 0.05
 PPO_POLICY: str = 'MlpPolicy'
@@ -52,7 +54,7 @@ class EnvSpec:
     continuous: bool
     solved_threshold: float | None
 ENV_SPECS: Dict[str, EnvSpec] = {PRIMARY_ENV_ID: EnvSpec(PRIMARY_ENV_ID, continuous=True, solved_threshold=200.0), SECONDARY_ENV_ID: EnvSpec(SECONDARY_ENV_ID, continuous=False, solved_threshold=475.0)}
-METHODS: List[str] = ['ppo', 'neat']
+METHODS: List[str] = ['ppo', 'es', 'cmaes', 'neat']
 BASELINES: List[str] = ['random', 'heuristic']
 CONDITIONS: List[str] = ['clean', 'perturbed']
 
