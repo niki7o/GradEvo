@@ -6,16 +6,16 @@ neuroevolution (NEAT) on continuous control.**
 GradEvo asks a deliberately narrow, rigorously tested question: *given a fixed
 budget of environment interaction steps, does gradient descent through a
 fixed-topology policy (PPO, Adam) or population-based search over weights **and**
-topology (NEAT) reach higher task performance — and whose solutions generalize
+topology (NEAT) reach higher task performance - and whose solutions generalize
 better to a held-out perturbed environment?* The contribution is **methodological
-rigor** — pre-registered hypotheses, exact step-budget matching, non-parametric
-tests with a family-wise correction, and calibrated reporting — not a new
+rigor** - pre-registered hypotheses, exact step-budget matching, non-parametric
+tests with a family-wise correction, and calibrated reporting - not a new
 algorithm.
 
 > **Reading guide.** The narrative lives in
 > [`notebooks/gradevo_analysis.ipynb`](notebooks/gradevo_analysis.ipynb). All
 > logic lives in [`src/gradevo`](src/gradevo). The notebook only imports, loads
-> result tables, and displays figures — by design.
+> result tables, and displays figures - by design.
 
 ---
 
@@ -41,7 +41,7 @@ separately.
 
 We default to **non-parametric** tests given small seed counts, report a
 **Shapiro-Wilk** normality check, and include a **parametric t-test cross-check**
-alongside each result for transparency. A **null result is a legitimate outcome** —
+alongside each result for transparency. A **null result is a legitimate outcome** -
 H1 is framed so that *failing to reject* is itself informative.
 
 ## Method at a glance
@@ -58,7 +58,7 @@ H1 is framed so that *failing to reject* is itself informative.
   documented fallback. The actual N is recorded in every results table.
 - **Libraries:** `stable-baselines3` (PPO/Adam), `neat-python` (NEAT),
   `gymnasium`, `scipy.stats`, `mlflow` (SQLite tracking). Established
-  implementations are used deliberately — the contribution is the experimental
+  implementations are used deliberately - the contribution is the experimental
   design, not reimplementing well-known algorithms.
 
 ## Quick start
@@ -94,7 +94,7 @@ gradevo/
 │   ├── envs/                          # step-counter + perturbation wrappers
 │   ├── agents/                        # baselines, PPO (SB3), NEAT (neat-python)
 │   ├── experiment/                    # N-seed runner + budget-matching logic
-│   ├── metrics/                       # H0–H3 tests, effect sizes, AUC
+│   ├── metrics/                       # H0-H3 tests, effect sizes, AUC
 │   ├── plots/figures.py              # all figure generation
 │   └── tracking.py                    # MLflow (SQLite) helper
 ├── scripts/                           # run_experiments.py, build_notebook.py
@@ -123,15 +123,15 @@ against silent library/environment drift.
 ## Previous research
 
 - **Stanley & Miikkulainen (2002).** *Evolving Neural Networks through Augmenting
-  Topologies.* Evolutionary Computation 10(2). — the NEAT algorithm.
+  Topologies.* Evolutionary Computation 10(2). - the NEAT algorithm.
 - **Schulman, Wolski, Dhariwal, Radford & Klimov (2017).** *Proximal Policy
-  Optimization Algorithms.* arXiv:1707.06347. — the PPO algorithm.
+  Optimization Algorithms.* arXiv:1707.06347. - the PPO algorithm.
 - **Salimans, Ho, Chen, Sidor & Sutskever (2017).** *Evolution Strategies as a
-  Scalable Alternative to Reinforcement Learning.* arXiv:1703.03864. — the
+  Scalable Alternative to Reinforcement Learning.* arXiv:1703.03864. - the
   closest prior "evolution vs. gradient RL" comparison.
 - **Such, Madhavan, Conti, Lehman, Stanley & Clune (2017).** *Deep
   Neuroevolution: Genetic Algorithms Are a Competitive Alternative for Training
-  Deep Neural Networks for Reinforcement Learning.* arXiv:1712.06567. — directly
+  Deep Neural Networks for Reinforcement Learning.* arXiv:1712.06567. - directly
   relevant prior comparison; §7 of the notebook compares numbers with explicit
   caveats.
 
@@ -142,7 +142,7 @@ network sizes, and compute scales).
 ## Threats to validity (summary)
 
 Step-count is an imperfect proxy for equal *compute* (per-step FLOP costs differ
-between PPO and NEAT — wall-clock is reported so the gap is visible); the chosen
+between PPO and NEAT - wall-clock is reported so the gap is visible); the chosen
 perturbation magnitudes are small by design and results are specific to that
 family; the environment scope is two Gym tasks; and seed counts give modest
 statistical power, so nulls are reported as "no detected difference," never as
@@ -150,4 +150,4 @@ proof of equality. Full discussion in the notebook's §8.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT - see [`LICENSE`](LICENSE).
