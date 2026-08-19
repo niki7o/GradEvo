@@ -95,12 +95,31 @@ def _per_seed_drop(fitness_df: pd.DataFrame, method: str) -> np.ndarray:
     return joined.to_numpy()
 
 def plot_budget_table(budget_df: pd.DataFrame) -> Figure:
-    (fig, ax) = plt.subplots(figsize=(10, 1.6 + 0.4 * len(budget_df)))
+    rename = {
+        'method': 'method',
+        'requested_steps': 'requested',
+        'realized_steps_mean': 'realized mean',
+        'realized_steps_std': 'realized std',
+        'realized_steps_min': 'realized min',
+        'realized_steps_max': 'realized max',
+        'discrepancy_pct': 'discrepancy %',
+        'wall_clock_mean_s': 'wall-clock (s)',
+        'n_seeds': 'N',
+    }
+    display_df = budget_df.rename(columns=rename).copy()
+    for col in ('requested', 'realized mean', 'realized std', 'realized min', 'realized max'):
+        if col in display_df.columns:
+            display_df[col] = display_df[col].map(lambda v: f'{int(round(float(v))):,}')
+    for col in ('discrepancy %', 'wall-clock (s)'):
+        if col in display_df.columns:
+            display_df[col] = display_df[col].map(lambda v: f'{float(v):.2f}')
+    (fig, ax) = plt.subplots(figsize=(13, 1.4 + 0.45 * len(display_df)))
     ax.axis('off')
-    table = ax.table(cellText=budget_df.values, colLabels=budget_df.columns, loc='center', cellLoc='center')
+    table = ax.table(cellText=display_df.values, colLabels=display_df.columns, loc='center', cellLoc='center')
     table.auto_set_font_size(False)
     table.set_fontsize(9)
-    table.scale(1, 1.4)
+    table.auto_set_column_width(col=list(range(len(display_df.columns))))
+    table.scale(1, 1.6)
     ax.set_title('Compute budget: requested vs. realized environment steps', pad=12)
     fig.tight_layout()
     return fig
@@ -128,16 +147,26 @@ def plot_gradient_contribution(fitness_df: pd.DataFrame) -> Figure:
     return fig
 
 def plot_flops_table(flops_df: pd.DataFrame) -> Figure:
-    (fig, ax) = plt.subplots(figsize=(10, 1.6 + 0.4 * len(flops_df)))
-    ax.axis('off')
-    display_df = flops_df.copy()
-    for col in ('inference_flops_mean', 'update_flops_mean', 'total_flops_mean', 'total_flops_std', 'per_step_forward_flops'):
+    rename = {
+        'method': 'method',
+        'n_seeds': 'N',
+        'per_step_forward_flops': 'fwd FLOPs / step',
+        'inference_flops_mean': 'inference FLOPs',
+        'update_flops_mean': 'update FLOPs',
+        'total_flops_mean': 'total FLOPs',
+        'total_flops_std': 'total FLOPs (std)',
+    }
+    display_df = flops_df.rename(columns=rename).copy()
+    for col in ('fwd FLOPs / step', 'inference FLOPs', 'update FLOPs', 'total FLOPs', 'total FLOPs (std)'):
         if col in display_df.columns:
-            display_df[col] = display_df[col].map(lambda v: f'{v:.2e}')
+            display_df[col] = display_df[col].map(lambda v: f'{float(v):.2e}')
+    (fig, ax) = plt.subplots(figsize=(13, 1.4 + 0.45 * len(display_df)))
+    ax.axis('off')
     table = ax.table(cellText=display_df.values, colLabels=display_df.columns, loc='center', cellLoc='center')
     table.auto_set_font_size(False)
     table.set_fontsize(9)
-    table.scale(1, 1.4)
+    table.auto_set_column_width(col=list(range(len(display_df.columns))))
+    table.scale(1, 1.6)
     ax.set_title('Compute-fairness sensitivity: per-method FLOPs at matched env-steps', pad=12)
     fig.tight_layout()
     return fig
