@@ -55,8 +55,8 @@ def test_normality_check_handles_degenerate():
     assert ht.normality_check([1.0]) is False
 
 def test_bonferroni_reject_threshold():
-    assert ht.bonferroni_reject(0.01, config.ALPHA_CORRECTED) is True
-    assert ht.bonferroni_reject(0.02, config.ALPHA_CORRECTED) is False
+    assert ht.bonferroni_reject(config.ALPHA_CORRECTED / 2, config.ALPHA_CORRECTED) is True
+    assert ht.bonferroni_reject(config.ALPHA_CORRECTED * 2, config.ALPHA_CORRECTED) is False
 
 def test_h0_gate_passes_when_trained_beats_baselines(rng):
     trained = rng.normal(200, 20, 20)

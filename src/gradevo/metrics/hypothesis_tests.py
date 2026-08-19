@@ -99,6 +99,10 @@ def test_h4_ppo_vs_es_defaults(ppo_final: ArrayLike, es_final: ArrayLike, alpha_
     (u_stat, p_value) = mann_whitney(ppo_final, es_final, alternative='two-sided')
     return HypothesisResult(hypothesis_id='H4', test_name='Mann-Whitney U (two-sided, PPO-defaults vs ES-defaults)', statistic=u_stat, p_value=p_value, effect_size=rank_biserial(ppo_final, es_final), effect_size_name='rank-biserial (PPO vs ES)', alpha=alpha_corrected, reject_null=bonferroni_reject(p_value, alpha_corrected), n_a=len(list(ppo_final)), n_b=len(list(es_final)), parametric_p=float(stats.ttest_ind(ppo_final, es_final).pvalue), normal_a=normality_check(ppo_final), normal_b=normality_check(es_final), extra={'median_ppo': float(np.median(ppo_final)), 'median_es': float(np.median(es_final)), 'mean_gap': float(np.mean(ppo_final) - np.mean(es_final))})
 
+def test_h5_tuned_ppo_vs_default(ppo_tuned_final: ArrayLike, ppo_default_final: ArrayLike, alpha_corrected: float=config.ALPHA_CORRECTED) -> HypothesisResult:
+    (u_stat, p_value) = mann_whitney(ppo_tuned_final, ppo_default_final, alternative='greater')
+    return HypothesisResult(hypothesis_id='H5', test_name='Mann-Whitney U (one-sided, tuned-PPO > default-PPO)', statistic=u_stat, p_value=p_value, effect_size=rank_biserial(ppo_tuned_final, ppo_default_final), effect_size_name='rank-biserial (tuned vs default PPO)', alpha=alpha_corrected, reject_null=bonferroni_reject(p_value, alpha_corrected), n_a=len(list(ppo_tuned_final)), n_b=len(list(ppo_default_final)), parametric_p=float(stats.ttest_ind(ppo_tuned_final, ppo_default_final, alternative='greater').pvalue), normal_a=normality_check(ppo_tuned_final), normal_b=normality_check(ppo_default_final), extra={'median_tuned': float(np.median(ppo_tuned_final)), 'median_default': float(np.median(ppo_default_final))})
+
 def _paired_seed_arrays(fitness_df: pd.DataFrame, method: str, condition: str) -> 'pd.Series':
     sub = fitness_df[(fitness_df['method'] == method) & (fitness_df['condition'] == condition)]
     return sub.set_index('seed')['fitness'].sort_index()
@@ -137,12 +141,15 @@ def run_pre_registered_suite(fitness_df: pd.DataFrame, curves_df: pd.DataFrame, 
     es_c = clean.get('es')
     if ppo_c is not None and es_c is not None:
         out['H4'] = test_h4_ppo_vs_es_defaults(ppo_c.values, es_c.values)
+    ppo_tuned_c = clean.get('ppo_tuned')
+    if ppo_tuned_c is not None and ppo_c is not None:
+        out['H5'] = test_h5_tuned_ppo_vs_default(ppo_tuned_c.values, ppo_c.values)
     return out
 
 def results_to_dataframe(results: Dict[str, object]) -> pd.DataFrame:
     rows: List[Dict[str, object]] = []
     ordered: List[HypothesisResult] = list(results['H0'])
-    for key in ('H1', 'H2', 'H3', 'H4'):
+    for key in ('H1', 'H2', 'H3', 'H4', 'H5'):
         if key in results:
             ordered.append(results[key])
     for r in ordered:
