@@ -165,6 +165,20 @@ def test_h4_fails_to_reject_when_ppo_and_es_equal(rng):
     result = ht.test_h4_ppo_vs_es_defaults(ppo, es)
     assert result.reject_null is False
 
+def test_permutation_test_agrees_with_mannwhitney_on_separated(rng):
+    a = rng.normal(200, 15, 20)
+    b = rng.normal(50, 20, 20)
+    (_, p_mw) = ht.mann_whitney(a, b, alternative='greater')
+    (_, p_perm) = ht.permutation_test_two_sample(a, b, alternative='greater', n_permutations=2000)
+    assert p_mw < 0.001
+    assert p_perm < 0.01
+
+def test_permutation_test_p_near_half_for_identical(rng):
+    a = rng.normal(0, 1, 30)
+    b = rng.normal(0, 1, 30)
+    (_, p_perm) = ht.permutation_test_two_sample(a, b, alternative='two-sided', n_permutations=1000)
+    assert 0.05 < p_perm < 0.95
+
 def test_suite_includes_h4_when_es_present(rng):
     (fitness_df, curves_df) = _synthetic_tables(rng)
     seeds = fitness_df['seed'].unique()

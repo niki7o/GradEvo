@@ -71,6 +71,31 @@ def wilcoxon_paired(a: ArrayLike, b: ArrayLike, alternative: str='two-sided') ->
 def bonferroni_reject(p_value: float, alpha_corrected: float) -> bool:
     return bool(p_value < alpha_corrected)
 
+def permutation_test_two_sample(a: ArrayLike, b: ArrayLike, alternative: str='two-sided', n_permutations: int=10000, seed: int=1234) -> Tuple[float, float]:
+    a_arr = np.asarray(list(a), dtype=np.float64)
+    b_arr = np.asarray(list(b), dtype=np.float64)
+    if a_arr.size < 2 or b_arr.size < 2:
+        return (float('nan'), float('nan'))
+    rng = np.random.default_rng(seed)
+    observed = float(np.mean(a_arr) - np.mean(b_arr))
+    combined = np.concatenate([a_arr, b_arr])
+    n_a = len(a_arr)
+    count = 0
+    for _ in range(n_permutations):
+        rng.shuffle(combined)
+        stat = float(np.mean(combined[:n_a]) - np.mean(combined[n_a:]))
+        if alternative == 'greater':
+            if stat >= observed:
+                count += 1
+        elif alternative == 'less':
+            if stat <= observed:
+                count += 1
+        else:
+            if abs(stat) >= abs(observed):
+                count += 1
+    p_value = (count + 1) / (n_permutations + 1)
+    return (observed, float(p_value))
+
 def test_h0_baselines(trained: ArrayLike, random_baseline: ArrayLike, heuristic_baseline: ArrayLike, method_name: str='method') -> List[HypothesisResult]:
     alpha_h0 = config.ALPHA / 2
     results: List[HypothesisResult] = []
