@@ -22,7 +22,7 @@ def make_ppo_policy(model: object) -> Policy:
         return action
     return policy
 
-def train_ppo(make_clean_env: Callable[[int], object], seed: int, run_cfg: config.RunConfig, eval_fitness_fn: Callable[[Policy, int], float], n_curve_points: int=20) -> PPOTrainResult:
+def train_ppo(make_clean_env: Callable[[int], object], seed: int, run_cfg: config.RunConfig, eval_fitness_fn: Callable[[Policy, int], float], n_curve_points: int=20, hyperparams: dict | None=None) -> PPOTrainResult:
     import time
     from stable_baselines3 import PPO
     from stable_baselines3.common.callbacks import BaseCallback
@@ -42,7 +42,8 @@ def train_ppo(make_clean_env: Callable[[int], object], seed: int, run_cfg: confi
                 curve_steps.append(int(train_env.step_count))
                 curve_fitness.append(float(fitness))
             return True
-    model = PPO(config.PPO_POLICY, train_env, seed=seed, **config.PPO_HYPERPARAMS)
+    hp = hyperparams if hyperparams is not None else config.PPO_HYPERPARAMS
+    model = PPO(config.PPO_POLICY, train_env, seed=seed, **hp)
     logger.info('PPO training start: seed=%d budget=%d', seed, run_cfg.step_budget)
     start = time.perf_counter()
     model.learn(total_timesteps=run_cfg.step_budget, callback=_CurveCallback())
