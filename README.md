@@ -18,6 +18,12 @@ null results. Not a new algorithm.
 > logic lives in [`src/gradevo`](src/gradevo). The notebook only imports,
 > loads result tables, and displays figures.
 
+> **Pre-registration.** Hypotheses, protocol, and analysis plan were locked
+> before the retake data was collected. See
+> [`PREREGISTRATION.md`](PREREGISTRATION.md) in this repo, git tag
+> [`prereg-retake-v1`](https://github.com/niki7o/GradEvo/releases/tag/prereg-retake-v1),
+> and Zenodo DOI [10.5281/zenodo.22010887](https://doi.org/10.5281/zenodo.22010887).
+
 ---
 
 ## The 2x2 design
