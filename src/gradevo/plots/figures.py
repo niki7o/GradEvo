@@ -31,7 +31,8 @@ def plot_learning_curves(curves_df: pd.DataFrame, step_budget: int, solved_thres
         ax.axhline(solved_threshold, color='black', linestyle='--', linewidth=1, label='solved')
     ax.set_xlabel('Environment interaction steps (env.step calls)')
     ax.set_ylabel('Mean episodic return (fitness)')
-    ax.set_title('Learning curves: fitness vs. environment steps (mean +/- 1 SD across seeds)')
+    n_seeds = int(curves_df['seed'].nunique()) if 'seed' in curves_df.columns else 0
+    ax.set_title(f'Learning curves: fitness vs. environment steps (mean +/- 1 SD across N={n_seeds} seeds)')
     ax.legend()
     fig.tight_layout()
     return fig
@@ -66,7 +67,8 @@ def plot_final_fitness_distributions(fitness_df: pd.DataFrame) -> Figure:
     ax.set_xticks(positions)
     ax.set_xticklabels(labels)
     ax.set_ylabel('Mean episodic return (fitness)')
-    ax.set_title('Final fitness distributions by method and condition')
+    n_seeds = int(fitness_df.query("condition == 'clean'").groupby('method')['seed'].nunique().max())
+    ax.set_title(f'Final fitness distributions by method and condition (N={n_seeds} seeds per cell)')
     fig.tight_layout()
     return fig
 
@@ -84,7 +86,8 @@ def plot_robustness_drop(fitness_df: pd.DataFrame) -> Figure:
     ax.set_xticks(range(len(config.METHODS)))
     ax.set_xticklabels([_display(m) for m in config.METHODS])
     ax.set_ylabel('Fitness drop under perturbation (clean - perturbed)')
-    ax.set_title('Robustness: performance drop under held-out perturbation (mean, 95% CI, per-seed points)')
+    n_seeds = int(fitness_df.query("condition == 'clean'").groupby('method')['seed'].nunique().max())
+    ax.set_title(f'Robustness: performance drop under held-out perturbation (mean, 95% CI, N={n_seeds} seeds)')
     fig.tight_layout()
     return fig
 
@@ -142,7 +145,8 @@ def plot_gradient_contribution(fitness_df: pd.DataFrame) -> Figure:
     ax.set_xticks(range(len(order)))
     ax.set_xticklabels([_display(m) for m in order])
     ax.set_ylabel('Mean episodic return (fitness, clean)')
-    ax.set_title('H4 decomposition: gradient contribution (PPO->ES) and topology search (ES->NEAT)')
+    n_seeds = int(fitness_df.query("condition == 'clean'").groupby('method')['seed'].nunique().max())
+    ax.set_title(f'Final clean fitness by method (mean, 95% CI, N={n_seeds} seeds per method)')
     fig.tight_layout()
     return fig
 
