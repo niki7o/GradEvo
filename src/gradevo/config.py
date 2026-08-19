@@ -16,6 +16,7 @@ MLFLOW_TRACKING_URI: str = f'sqlite:///{MLFLOW_DB_PATH}'
 MLFLOW_EXPERIMENT_NAME: str = 'gradevo'
 PRIMARY_ENV_ID: str = 'LunarLanderContinuous-v3'
 SECONDARY_ENV_ID: str = 'CartPole-v1'
+TERTIARY_ENV_ID: str = 'Pendulum-v1'
 MAX_EPISODE_STEPS: int = 1000
 TOTAL_STEP_BUDGET: int = 500000
 QUICK_STEP_BUDGET: int = 20000
@@ -53,7 +54,7 @@ class EnvSpec:
     env_id: str
     continuous: bool
     solved_threshold: float | None
-ENV_SPECS: Dict[str, EnvSpec] = {PRIMARY_ENV_ID: EnvSpec(PRIMARY_ENV_ID, continuous=True, solved_threshold=200.0), SECONDARY_ENV_ID: EnvSpec(SECONDARY_ENV_ID, continuous=False, solved_threshold=475.0)}
+ENV_SPECS: Dict[str, EnvSpec] = {PRIMARY_ENV_ID: EnvSpec(PRIMARY_ENV_ID, continuous=True, solved_threshold=200.0), SECONDARY_ENV_ID: EnvSpec(SECONDARY_ENV_ID, continuous=False, solved_threshold=475.0), TERTIARY_ENV_ID: EnvSpec(TERTIARY_ENV_ID, continuous=True, solved_threshold=-200.0)}
 METHODS: List[str] = ['ppo', 'es', 'cmaes', 'neat']
 BASELINES: List[str] = ['random', 'heuristic']
 CONDITIONS: List[str] = ['clean', 'perturbed']
