@@ -6,7 +6,11 @@ import pandas as pd
 from matplotlib.figure import Figure
 from gradevo import config
 from gradevo.metrics import learning_curves as lc
-_METHOD_COLORS: Dict[str, str] = {'ppo': '#1f77b4', 'neat': '#d62728', 'random': '#7f7f7f', 'heuristic': '#2ca02c'}
+_METHOD_COLORS: Dict[str, str] = {'ppo': '#1f77b4', 'es': '#ff7f0e', 'cmaes': '#9467bd', 'neat': '#d62728', 'random': '#7f7f7f', 'heuristic': '#2ca02c'}
+_METHOD_DISPLAY: Dict[str, str] = {'ppo': 'PPO', 'es': 'ES', 'cmaes': 'CMA-ES', 'neat': 'NEAT', 'random': 'random', 'heuristic': 'heuristic'}
+
+def _display(method: str) -> str:
+    return _METHOD_DISPLAY.get(method, method.upper())
 
 def _method_color(method: str) -> str:
     return _METHOD_COLORS.get(method, '#333333')
@@ -21,7 +25,7 @@ def plot_learning_curves(curves_df: pd.DataFrame, step_budget: int, solved_thres
         aligned = _align_seed_curves(method_df, grid)
         (mean, lower, upper) = lc.seed_variance_band(aligned)
         color = _method_color(method)
-        ax.plot(grid, mean, label=method.upper(), color=color, linewidth=2)
+        ax.plot(grid, mean, label=_display(method), color=color, linewidth=2)
         ax.fill_between(grid, lower, upper, color=color, alpha=0.2)
     if solved_threshold is not None:
         ax.axhline(solved_threshold, color='black', linestyle='--', linewidth=1, label='solved')
@@ -51,7 +55,7 @@ def plot_final_fitness_distributions(fitness_df: pd.DataFrame) -> Figure:
                 continue
             positions.append(pos)
             data.append(vals)
-            labels.append(f'{method.upper()}\n{cond}')
+            labels.append(f'{_display(method)}\n{cond}')
             colors.append(_method_color(method))
             pos += 1
     parts = ax.violinplot(data, positions=positions, showmeans=False, showextrema=False)
@@ -74,11 +78,11 @@ def plot_robustness_drop(fitness_df: pd.DataFrame) -> Figure:
             continue
         mean = float(drops.mean())
         ci = 1.96 * drops.std(ddof=1) / np.sqrt(drops.size) if drops.size > 1 else 0.0
-        ax.bar(i, mean, yerr=ci, capsize=6, color=_method_color(method), alpha=0.6, label=method.upper())
+        ax.bar(i, mean, yerr=ci, capsize=6, color=_method_color(method), alpha=0.6, label=_display(method))
         ax.scatter(np.full(drops.size, i) + np.random.default_rng(0).uniform(-0.08, 0.08, drops.size), drops, color='black', s=18, zorder=3)
     ax.axhline(0.0, color='black', linewidth=0.8)
     ax.set_xticks(range(len(config.METHODS)))
-    ax.set_xticklabels([m.upper() for m in config.METHODS])
+    ax.set_xticklabels([_display(m) for m in config.METHODS])
     ax.set_ylabel('Fitness drop under perturbation (clean - perturbed)')
     ax.set_title('Robustness: performance drop under held-out perturbation (mean, 95% CI, per-seed points)')
     fig.tight_layout()
@@ -98,6 +102,43 @@ def plot_budget_table(budget_df: pd.DataFrame) -> Figure:
     table.set_fontsize(9)
     table.scale(1, 1.4)
     ax.set_title('Compute budget: requested vs. realized environment steps', pad=12)
+    fig.tight_layout()
+    return fig
+
+def plot_gradient_contribution(fitness_df: pd.DataFrame) -> Figure:
+    order = ['ppo', 'es', 'cmaes', 'neat']
+    order = [m for m in order if not fitness_df.query("method == @m and condition == 'clean'").empty]
+    (fig, ax) = plt.subplots(figsize=(8, 5))
+    rng = np.random.default_rng(0)
+    means: List[float] = []
+    for (i, method) in enumerate(order):
+        vals = fitness_df[(fitness_df['method'] == method) & (fitness_df['condition'] == 'clean')]['fitness'].to_numpy()
+        if vals.size == 0:
+            continue
+        mean = float(vals.mean())
+        means.append(mean)
+        ci = 1.96 * vals.std(ddof=1) / np.sqrt(vals.size) if vals.size > 1 else 0.0
+        ax.bar(i, mean, yerr=ci, capsize=6, color=_method_color(method), alpha=0.6)
+        ax.scatter(np.full(vals.size, i) + rng.uniform(-0.08, 0.08, vals.size), vals, color='black', s=18, zorder=3)
+    ax.set_xticks(range(len(order)))
+    ax.set_xticklabels([_display(m) for m in order])
+    ax.set_ylabel('Mean episodic return (fitness, clean)')
+    ax.set_title('H4 decomposition: gradient contribution (PPO->ES) and topology search (ES->NEAT)')
+    fig.tight_layout()
+    return fig
+
+def plot_flops_table(flops_df: pd.DataFrame) -> Figure:
+    (fig, ax) = plt.subplots(figsize=(10, 1.6 + 0.4 * len(flops_df)))
+    ax.axis('off')
+    display_df = flops_df.copy()
+    for col in ('inference_flops_mean', 'update_flops_mean', 'total_flops_mean', 'total_flops_std', 'per_step_forward_flops'):
+        if col in display_df.columns:
+            display_df[col] = display_df[col].map(lambda v: f'{v:.2e}')
+    table = ax.table(cellText=display_df.values, colLabels=display_df.columns, loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(9)
+    table.scale(1, 1.4)
+    ax.set_title('Compute-fairness sensitivity: per-method FLOPs at matched env-steps', pad=12)
     fig.tight_layout()
     return fig
 
