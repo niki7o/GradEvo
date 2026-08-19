@@ -95,6 +95,10 @@ def test_h3_robustness(ppo_drop: ArrayLike, neat_drop: ArrayLike, alpha_correcte
     (u_stat, p_value) = mann_whitney(neat_drop, ppo_drop, alternative='less')
     return HypothesisResult(hypothesis_id='H3', test_name='Mann-Whitney U (one-sided, NEAT drop < PPO drop)', statistic=u_stat, p_value=p_value, effect_size=rank_biserial(neat_drop, ppo_drop), effect_size_name='rank-biserial (NEAT vs PPO drop)', alpha=alpha_corrected, reject_null=bonferroni_reject(p_value, alpha_corrected), n_a=len(list(neat_drop)), n_b=len(list(ppo_drop)), parametric_p=float(stats.ttest_ind(neat_drop, ppo_drop, alternative='less').pvalue), normal_a=normality_check(neat_drop), normal_b=normality_check(ppo_drop), extra={'median_ppo_drop': float(np.median(ppo_drop)), 'median_neat_drop': float(np.median(neat_drop))})
 
+def test_h4_gradient_contribution(ppo_final: ArrayLike, es_final: ArrayLike, alpha_corrected: float=config.ALPHA_CORRECTED) -> HypothesisResult:
+    (u_stat, p_value) = mann_whitney(ppo_final, es_final, alternative='greater')
+    return HypothesisResult(hypothesis_id='H4', test_name='Mann-Whitney U (one-sided, PPO>ES; gradient contribution)', statistic=u_stat, p_value=p_value, effect_size=rank_biserial(ppo_final, es_final), effect_size_name='rank-biserial (PPO vs ES)', alpha=alpha_corrected, reject_null=bonferroni_reject(p_value, alpha_corrected), n_a=len(list(ppo_final)), n_b=len(list(es_final)), parametric_p=float(stats.ttest_ind(ppo_final, es_final, alternative='greater').pvalue), normal_a=normality_check(ppo_final), normal_b=normality_check(es_final), extra={'median_ppo': float(np.median(ppo_final)), 'median_es': float(np.median(es_final)), 'mean_gap': float(np.mean(ppo_final) - np.mean(es_final))})
+
 def _paired_seed_arrays(fitness_df: pd.DataFrame, method: str, condition: str) -> 'pd.Series':
     sub = fitness_df[(fitness_df['method'] == method) & (fitness_df['condition'] == condition)]
     return sub.set_index('seed')['fitness'].sort_index()
@@ -108,26 +112,39 @@ def per_seed_auc(curves_df: pd.DataFrame, method: str, step_budget: int, fitness
     return pd.Series(aucs).sort_index()
 
 def run_pre_registered_suite(fitness_df: pd.DataFrame, curves_df: pd.DataFrame, step_budget: int) -> Dict[str, object]:
-    ppo_clean = _paired_seed_arrays(fitness_df, 'ppo', 'clean')
-    neat_clean = _paired_seed_arrays(fitness_df, 'neat', 'clean')
-    ppo_pert = _paired_seed_arrays(fitness_df, 'ppo', 'perturbed')
-    neat_pert = _paired_seed_arrays(fitness_df, 'neat', 'perturbed')
+    trained_methods = [m for m in config.METHODS if m in set(fitness_df['method'].unique())]
+    clean = {m: _paired_seed_arrays(fitness_df, m, 'clean') for m in trained_methods}
+    pert = {m: _paired_seed_arrays(fitness_df, m, 'perturbed') for m in trained_methods}
     rnd = _paired_seed_arrays(fitness_df, 'random', 'clean')
     heur = _paired_seed_arrays(fitness_df, 'heuristic', 'clean')
     fitness_lo = float(rnd.mean()) if not rnd.empty else 0.0
-    fitness_hi = float(max(ppo_clean.max(), neat_clean.max()))
-    ppo_auc = per_seed_auc(curves_df, 'ppo', step_budget, fitness_lo, fitness_hi)
-    neat_auc = per_seed_auc(curves_df, 'neat', step_budget, fitness_lo, fitness_hi)
-    common_seeds = ppo_auc.index.intersection(neat_auc.index)
-    h0 = test_h0_baselines(ppo_clean.values, rnd.values, heur.values, 'ppo')
-    h0 += test_h0_baselines(neat_clean.values, rnd.values, heur.values, 'neat')
-    return {'H0': h0, 'H1': test_h1_final_fitness(ppo_clean.values, neat_clean.values), 'H2': test_h2_sample_efficiency(ppo_auc.loc[common_seeds].values, neat_auc.loc[common_seeds].values), 'H3': test_h3_robustness((ppo_clean - ppo_pert).dropna().values, (neat_clean - neat_pert).dropna().values)}
+    fitness_hi = float(max((s.max() for s in clean.values())))
+    auc = {m: per_seed_auc(curves_df, m, step_budget, fitness_lo, fitness_hi) for m in trained_methods}
+    h0: List[HypothesisResult] = []
+    for m in trained_methods:
+        h0 += test_h0_baselines(clean[m].values, rnd.values, heur.values, m)
+    (ppo_c, neat_c) = (clean.get('ppo'), clean.get('neat'))
+    (ppo_p, neat_p) = (pert.get('ppo'), pert.get('neat'))
+    (ppo_a, neat_a) = (auc.get('ppo'), auc.get('neat'))
+    out: Dict[str, object] = {'H0': h0}
+    if ppo_c is not None and neat_c is not None:
+        out['H1'] = test_h1_final_fitness(ppo_c.values, neat_c.values)
+    if ppo_a is not None and neat_a is not None:
+        common = ppo_a.index.intersection(neat_a.index)
+        out['H2'] = test_h2_sample_efficiency(ppo_a.loc[common].values, neat_a.loc[common].values)
+    if ppo_c is not None and neat_c is not None and (ppo_p is not None) and (neat_p is not None):
+        out['H3'] = test_h3_robustness((ppo_c - ppo_p).dropna().values, (neat_c - neat_p).dropna().values)
+    es_c = clean.get('es')
+    if ppo_c is not None and es_c is not None:
+        out['H4'] = test_h4_gradient_contribution(ppo_c.values, es_c.values)
+    return out
 
 def results_to_dataframe(results: Dict[str, object]) -> pd.DataFrame:
     rows: List[Dict[str, object]] = []
     ordered: List[HypothesisResult] = list(results['H0'])
-    for key in ('H1', 'H2', 'H3'):
-        ordered.append(results[key])
+    for key in ('H1', 'H2', 'H3', 'H4'):
+        if key in results:
+            ordered.append(results[key])
     for r in ordered:
         rows.append({'id': r.hypothesis_id, 'test': r.test_name, 'statistic': round(r.statistic, 3), 'p_value': round(r.p_value, 5), 'alpha': round(r.alpha, 4), 'reject_null': r.reject_null, 'effect_size': round(r.effect_size, 3), 'effect_name': r.effect_size_name, 'parametric_p': None if r.parametric_p is None else round(r.parametric_p, 5), 'n_a': r.n_a, 'n_b': r.n_b})
     return pd.DataFrame(rows)

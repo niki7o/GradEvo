@@ -149,3 +149,31 @@ def test_per_seed_auc_in_unit_range(rng):
     (_, curves_df) = _synthetic_tables(rng)
     auc = ht.per_seed_auc(curves_df, 'ppo', 500000, -150.0, 220.0)
     assert ((auc >= 0.0) & (auc <= 1.0)).all()
+
+def test_h4_rejects_when_ppo_clearly_beats_es(rng):
+    ppo = rng.normal(200, 15, 20)
+    es = rng.normal(80, 20, 20)
+    result = ht.test_h4_gradient_contribution(ppo, es)
+    assert result.hypothesis_id == 'H4'
+    assert result.reject_null is True
+    assert result.effect_size > 0
+    assert result.alpha == pytest.approx(config.ALPHA_CORRECTED)
+
+def test_h4_fails_to_reject_when_ppo_and_es_equal(rng):
+    ppo = rng.normal(150, 20, 20)
+    es = rng.normal(150, 20, 20)
+    result = ht.test_h4_gradient_contribution(ppo, es)
+    assert result.reject_null is False
+
+def test_suite_includes_h4_when_es_present(rng):
+    (fitness_df, curves_df) = _synthetic_tables(rng)
+    seeds = fitness_df['seed'].unique()
+    extra_rows = []
+    for s in seeds:
+        extra_rows.append({'method': 'es', 'condition': 'clean', 'seed': s, 'fitness': rng.normal(80, 20)})
+        extra_rows.append({'method': 'es', 'condition': 'perturbed', 'seed': s, 'fitness': rng.normal(60, 20)})
+    fitness_df = pd.concat([fitness_df, pd.DataFrame(extra_rows)], ignore_index=True)
+    results = ht.run_pre_registered_suite(fitness_df, curves_df, 500000)
+    assert 'H4' in results
+    assert results['H4'].reject_null is True
+    assert len(results['H0']) == 6
