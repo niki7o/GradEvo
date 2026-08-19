@@ -13,7 +13,7 @@ Timestamp proof:
 - A Zenodo DOI will be added below once minted (does not affect the
   primary GitHub + Wayback proof).
 
-**Zenodo DOI:** _(to be filled in after minting)_
+**Zenodo DOI:** [10.5281/zenodo.22010887](https://doi.org/10.5281/zenodo.22010887)
 
 ---
 
