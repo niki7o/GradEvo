@@ -95,9 +95,9 @@ def test_h3_robustness(ppo_drop: ArrayLike, neat_drop: ArrayLike, alpha_correcte
     (u_stat, p_value) = mann_whitney(neat_drop, ppo_drop, alternative='less')
     return HypothesisResult(hypothesis_id='H3', test_name='Mann-Whitney U (one-sided, NEAT drop < PPO drop)', statistic=u_stat, p_value=p_value, effect_size=rank_biserial(neat_drop, ppo_drop), effect_size_name='rank-biserial (NEAT vs PPO drop)', alpha=alpha_corrected, reject_null=bonferroni_reject(p_value, alpha_corrected), n_a=len(list(neat_drop)), n_b=len(list(ppo_drop)), parametric_p=float(stats.ttest_ind(neat_drop, ppo_drop, alternative='less').pvalue), normal_a=normality_check(neat_drop), normal_b=normality_check(ppo_drop), extra={'median_ppo_drop': float(np.median(ppo_drop)), 'median_neat_drop': float(np.median(neat_drop))})
 
-def test_h4_gradient_contribution(ppo_final: ArrayLike, es_final: ArrayLike, alpha_corrected: float=config.ALPHA_CORRECTED) -> HypothesisResult:
-    (u_stat, p_value) = mann_whitney(ppo_final, es_final, alternative='greater')
-    return HypothesisResult(hypothesis_id='H4', test_name='Mann-Whitney U (one-sided, PPO>ES; gradient contribution)', statistic=u_stat, p_value=p_value, effect_size=rank_biserial(ppo_final, es_final), effect_size_name='rank-biserial (PPO vs ES)', alpha=alpha_corrected, reject_null=bonferroni_reject(p_value, alpha_corrected), n_a=len(list(ppo_final)), n_b=len(list(es_final)), parametric_p=float(stats.ttest_ind(ppo_final, es_final, alternative='greater').pvalue), normal_a=normality_check(ppo_final), normal_b=normality_check(es_final), extra={'median_ppo': float(np.median(ppo_final)), 'median_es': float(np.median(es_final)), 'mean_gap': float(np.mean(ppo_final) - np.mean(es_final))})
+def test_h4_ppo_vs_es_defaults(ppo_final: ArrayLike, es_final: ArrayLike, alpha_corrected: float=config.ALPHA_CORRECTED) -> HypothesisResult:
+    (u_stat, p_value) = mann_whitney(ppo_final, es_final, alternative='two-sided')
+    return HypothesisResult(hypothesis_id='H4', test_name='Mann-Whitney U (two-sided, PPO-defaults vs ES-defaults)', statistic=u_stat, p_value=p_value, effect_size=rank_biserial(ppo_final, es_final), effect_size_name='rank-biserial (PPO vs ES)', alpha=alpha_corrected, reject_null=bonferroni_reject(p_value, alpha_corrected), n_a=len(list(ppo_final)), n_b=len(list(es_final)), parametric_p=float(stats.ttest_ind(ppo_final, es_final).pvalue), normal_a=normality_check(ppo_final), normal_b=normality_check(es_final), extra={'median_ppo': float(np.median(ppo_final)), 'median_es': float(np.median(es_final)), 'mean_gap': float(np.mean(ppo_final) - np.mean(es_final))})
 
 def _paired_seed_arrays(fitness_df: pd.DataFrame, method: str, condition: str) -> 'pd.Series':
     sub = fitness_df[(fitness_df['method'] == method) & (fitness_df['condition'] == condition)]
@@ -136,7 +136,7 @@ def run_pre_registered_suite(fitness_df: pd.DataFrame, curves_df: pd.DataFrame, 
         out['H3'] = test_h3_robustness((ppo_c - ppo_p).dropna().values, (neat_c - neat_p).dropna().values)
     es_c = clean.get('es')
     if ppo_c is not None and es_c is not None:
-        out['H4'] = test_h4_gradient_contribution(ppo_c.values, es_c.values)
+        out['H4'] = test_h4_ppo_vs_es_defaults(ppo_c.values, es_c.values)
     return out
 
 def results_to_dataframe(results: Dict[str, object]) -> pd.DataFrame:

@@ -153,7 +153,7 @@ def test_per_seed_auc_in_unit_range(rng):
 def test_h4_rejects_when_ppo_clearly_beats_es(rng):
     ppo = rng.normal(200, 15, 20)
     es = rng.normal(80, 20, 20)
-    result = ht.test_h4_gradient_contribution(ppo, es)
+    result = ht.test_h4_ppo_vs_es_defaults(ppo, es)
     assert result.hypothesis_id == 'H4'
     assert result.reject_null is True
     assert result.effect_size > 0
@@ -162,7 +162,7 @@ def test_h4_rejects_when_ppo_clearly_beats_es(rng):
 def test_h4_fails_to_reject_when_ppo_and_es_equal(rng):
     ppo = rng.normal(150, 20, 20)
     es = rng.normal(150, 20, 20)
-    result = ht.test_h4_gradient_contribution(ppo, es)
+    result = ht.test_h4_ppo_vs_es_defaults(ppo, es)
     assert result.reject_null is False
 
 def test_suite_includes_h4_when_es_present(rng):
