@@ -127,7 +127,7 @@ def evaluate_baselines(env_id: str, run_cfg: config.RunConfig) -> Dict[str, List
     probe.close()
     for seed in run_cfg.seeds:
         random_agent = RandomAgent(gym.make(env_id).action_space, seed)
-        heuristic_agent = HeuristicAgent(action_space)
+        heuristic_agent = HeuristicAgent(action_space, env_id=env_id)
         results['random'].append(mean_fitness(lambda s: make_clean_env(env_id, s), random_agent.act, run_cfg.eval_episodes, seed))
         results['heuristic'].append(mean_fitness(lambda s: make_clean_env(env_id, s), heuristic_agent.act, run_cfg.eval_episodes, seed))
     return results

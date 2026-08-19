@@ -16,15 +16,25 @@ class RandomAgent:
 
 class HeuristicAgent:
 
-    def __init__(self, action_space: gym.Space) -> None:
+    def __init__(self, action_space: gym.Space, env_id: str | None=None) -> None:
         self.continuous = isinstance(action_space, gym.spaces.Box)
         self._action_space = action_space
+        self._env_id = env_id or ''
 
     def act(self, observation: Any) -> Any:
         obs = np.asarray(observation, dtype=np.float64)
-        if self.continuous:
-            return self._lunar_lander_control(obs)
-        return self._cartpole_control(obs)
+        if not self.continuous:
+            return self._cartpole_control(obs)
+        if 'Pendulum' in self._env_id or obs.shape == (3,):
+            return self._pendulum_control(obs)
+        return self._lunar_lander_control(obs)
+
+    def _pendulum_control(self, obs: np.ndarray) -> np.ndarray:
+        (cos_theta, sin_theta, theta_dot) = (obs[0], obs[1], obs[2])
+        theta = float(np.arctan2(sin_theta, cos_theta))
+        torque = float(np.clip(-8.0 * theta - 1.5 * theta_dot, -2.0, 2.0))
+        action = np.array([torque], dtype=np.float32)
+        return np.clip(action, self._action_space.low, self._action_space.high)
 
     def _lunar_lander_control(self, obs: np.ndarray) -> np.ndarray:
         angle_target = obs[0] * 0.5 + obs[2] * 1.0
