@@ -159,5 +159,51 @@ Threats acknowledged in advance:
 
 ---
 
-**Signed by commit hash of this file** on the retake branch of
-`github.com/niki7o/GradEvo`.
+## Results as of 2026-08-19 (retake data collection complete)
+
+This section is filled in **after** running the pre-registered protocol, so
+readers can see whether the outcomes matched the hypotheses. Filled in
+via a git commit dated after the hypothesis-lock commit; the diff on
+GitHub shows this section did not exist at pre-registration time.
+
+**Mean clean fitness across N = 20 seeds:**
+
+LunarLanderContinuous-v3 (solved >= 200):
+- heuristic 253, CMA-ES 238, ES 223, ppo_tuned 183, ppo 165, NEAT 35, random -234
+
+Pendulum-v1 (solved ~ -200):
+- ppo -210, CMA-ES -1042, ES -1096, heuristic -1108, ppo_tuned -1108, NEAT -1169, random -1307
+
+**Hypothesis outcomes at alpha_corrected = 0.010:**
+
+| ID | LunarLander outcome | Pendulum outcome |
+|----|---------------------|------------------|
+| H0 vs random  | all reject (p < 1e-4) | all reject |
+| H0 vs heuristic | none reject (heuristic wins) | only default-PPO rejects |
+| H1 (NEAT != PPO) | fail to reject (p = 0.014) | **reject** (p < 1e-5, PPO wins) |
+| H2 (PPO more sample-efficient) | fail to reject | fail to reject |
+| H3 (NEAT more robust) | fail to reject | fail to reject |
+| H4 (PPO-defaults != ES-defaults) | **reject** (p = 0.0006, ES higher) | **reject** (p < 1e-5, PPO higher) |
+| H5 (tuned-PPO > default-PPO) | fail to reject (p = 0.09) | fail to reject; effect -1.0 (tuning hurts) |
+
+**Notable findings versus the pre-registered plan:**
+
+1. **H4 direction flips across environments.** On LunarLander ES beats PPO
+   at defaults; on Pendulum PPO clearly beats ES. Since H4 was
+   pre-registered as *two-sided* and framed as a bounded
+   defaults-vs-defaults comparison, both rejections are legitimate; the
+   cross-environment inversion is the interesting finding.
+2. **H5 fails cleanly on both envs.** The sb3-zoo tuned PPO configuration
+   for LunarLander does not detectably outperform SB3 defaults there
+   (p = 0.09) and *actively hurts* on Pendulum (effect -1.0). Reported as
+   a bounded null: this particular tuned config does not generalize
+   across our two tasks.
+3. **First learned method to dominate the heuristic:** default PPO on
+   Pendulum. Every other method-environment pair failed to beat the
+   hand-coded controller.
+
+No hypotheses were added or removed after data collection. No
+p-hacking occurred: the analysis code (`gradevo.metrics.hypothesis_tests`)
+is the same code that was committed under the `prereg-retake-v1` tag; the
+results above are its output when run against the retake CSVs in
+`data/processed/`.
