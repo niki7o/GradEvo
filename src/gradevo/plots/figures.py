@@ -127,6 +127,29 @@ def plot_budget_table(budget_df: pd.DataFrame) -> Figure:
     fig.tight_layout()
     return fig
 
+def plot_h4_direction_flip(fitness_lunar: pd.DataFrame, fitness_pend: pd.DataFrame) -> Figure:
+    (fig, axes) = plt.subplots(1, 2, figsize=(11, 4.5))
+    rng = np.random.default_rng(0)
+    for (ax, df, title, solved) in ((axes[0], fitness_lunar, 'LunarLanderContinuous-v3 (solved >= 200)', 200.0), (axes[1], fitness_pend, 'Pendulum-v1 (solved ~ -200)', -200.0)):
+        for (i, method) in enumerate(('ppo', 'es')):
+            vals = df[(df['method'] == method) & (df['condition'] == 'clean')]['fitness'].to_numpy()
+            if vals.size == 0:
+                continue
+            mean = float(vals.mean())
+            ci = 1.96 * vals.std(ddof=1) / np.sqrt(vals.size) if vals.size > 1 else 0.0
+            ax.bar(i, mean, yerr=ci, capsize=6, color=_method_color(method), alpha=0.6)
+            ax.scatter(np.full(vals.size, i) + rng.uniform(-0.08, 0.08, vals.size), vals, color='black', s=18, zorder=3)
+        ax.axhline(solved, color='black', linestyle='--', linewidth=1, alpha=0.5, label='solved')
+        ax.set_xticks([0, 1])
+        ax.set_xticklabels(['PPO defaults', 'ES defaults'])
+        ax.set_ylabel('Mean episodic return (fitness, clean)')
+        n = int(df.query("condition == 'clean'").groupby('method')['seed'].nunique().max())
+        ax.set_title(f'{title} (N={n})')
+        ax.legend(loc='best', fontsize=8)
+    fig.suptitle('H4 direction flip: PPO-defaults vs ES-defaults across environments', y=1.02)
+    fig.tight_layout()
+    return fig
+
 def plot_gradient_contribution(fitness_df: pd.DataFrame) -> Figure:
     order = ['ppo', 'es', 'cmaes', 'neat']
     order = [m for m in order if not fitness_df.query("method == @m and condition == 'clean'").empty]
